@@ -3,7 +3,7 @@ MAINTAINER Richard Louapre <richard.louapre@marklogic.com>
  
 #update yum repository and install openssh server
 RUN yum update -y
-RUN yum install -y openssh-server
+RUN yum install -y openssh-server wget
  
 #generate ssh key
 RUN ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key
@@ -15,11 +15,9 @@ RUN mkdir -p /root/.ssh && chown root.root /root && chmod 700 /root/.ssh
 RUN echo 'root:123456' | chpasswd
  
 WORKDIR /tmp
-ADD MarkLogic-7.0-4.x86_64.rpm /tmp/MarkLogic-7.0-4.x86_64.rpm
-# RUN curl -k -L -O https://www.dropbox.com/s/f4107q87gub1rcm/MarkLogic-7.0-4.x86_64.rpm?dl=0
-# RUN mv MarkLogic-7.0-4.x86_64.rpm?dl=0 MarkLogic-7.0-4.x86_64.rpm
-RUN yum -y install /tmp/MarkLogic-7.0-4.x86_64.rpm
-RUN rm /tmp/MarkLogic-7.0-4.x86_64.rpm
+RUN wget -O ml.rpm http://public.zopyx.com/ml.rpm
+RUN yum -y install /tmp/ml.rpm
+RUN rm /tmp/ml.rpm
 # Setup supervisor
 ADD https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py /tmp/ez_setup.py
 RUN python /tmp/ez_setup.py
